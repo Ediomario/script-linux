@@ -1,0 +1,67 @@
+
+Update server:
+ sudo apt update && apt upgrade -y
+
+Install Package Dependencies:
+ sudo apt install wget apt-transport-https gnupg2 libimlib2 libimlib2-dev
+
+ Zammad to function correctly, your system has to use the correct locales.:
+ sudo apt install locales
+ sudo locale-gen en_US.UTF-8
+ echo "LANG=en_US.UTF-8" | sudo tee /etc/default/locale
+
+Installing Database:
+ sudo apt install mariadb-server mariadb-client -y
+ sudo apt install -y software-properties-common
+ sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_s...
+
+ sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.... focal main'
+
+ sudo apt update && sudo apt install -y mariadb-server mariadb-client
+ mariadb --version
+
+ sudo mysql_secure_installation
+
+Install Apache web server:
+ sudo apt install apache2
+ sudo a2enmod headers
+
+Adding Elasticsearch repository:
+ wget -qO - https://artifacts.elastic.co/GPG-KEY-... | sudo apt-key add 
+
+ echo "deb https://artifacts.elastic.co/packages... stable main" | sudo tee  /etc/apt/sources.list.d/elastic-7.x.list
+
+ sudo apt update
+
+Install Zammad:
+ wget -qO https://dl.packager.io/srv/zammad/zam... | sudo apt-key add -
+ 
+Ubuntu 20.04:
+
+echo "deb https://dl.packager.io/srv/deb/zammad... 20.04 main" | sudo tee /etc/apt/sources.list.d/zammad.list
+
+ sudo apt update
+ sudo apt install zammad
+
+ sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment
+
+Start Zammad:
+ sudo systemctl start zammad
+ sudo systemctl enable zammad
+
+Set the Elasticsearch server address:
+ sudo zammad run rails r "Setting.set('es_url', 'http://localhost:9200')"
+
+Build the search index:
+ sudo zammad run rake searchindex:rebuild
+
+disable the Apache default virtual host:
+ sudo a2dissite 000-default.conf
+
+Restart apache2 web server:
+ sudo systemctl restart apache2
+
+Confirm service is started:
+ systemctl status apache2
+
+ http://server_ip
