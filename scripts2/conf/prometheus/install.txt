@@ -1,0 +1,45 @@
+#Install Prometheus Ubuntu Server 20.04.3 LTS
+#Link: https://www.vultr.com/docs/install-prometheus-server-on-ubuntu-20-04/
+#Link: https://linuxhint.com/install-prometheus-on-ubuntu/
+
+sudo groupadd --system prometheus
+sudo useradd -s /sbin/nologin --no-create-home --system -g prometheus prometheus
+sudo mkdir -pv /etc/prometheus
+sudo mkdir -pv /var/lib/prometheus
+wget -O prometheus.tar.gz https://github.com/prometheus/prometheus/releases/download/v2.43.0/prometheus-2.43.0.linux-amd64.tar.gz
+tar -zxvf prometheus.tar.gz
+sudo cp -Rv prometheus*/{prometheus,promtool} /usr/local/bin/
+sudo cp -Rv prometheus*/{consoles/,console_libraries/} /etc/prometheus/
+sudo cp -Rv conf/prometheus/prometheus.yml /etc/prometheus/
+sudo cp -v conf/prometheus/prometheus.service /etc/systemd/system/prometheus.service
+sudo chown -Rv prometheus:prometheus /etc/prometheus/ /var/lib/prometheus/
+sudo chmod -Rv 775 /etc/prometheus/ /var/lib/prometheus/
+sudo prometheus --version
+sudo promtool --version
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+sudo systemctl status prometheus
+sudo journalctl -u prometheus -f --no-pager
+
+=========================================================================================
+
+[Unit]
+
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Restart=always
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+    --config.file=/etc/prometheus/prometheus.yml \
+    --storage.tsdb.path=/var/lib/prometheus/ \
+    --web.console.templates=/etc/prometheus/consoles \
+    --web.console.libraries=/etc/prometheus/console_libraries \
+    --web.listen-address=0.0.0.0:9090
+
+[Install]
+WantedBy=multi-user.target
