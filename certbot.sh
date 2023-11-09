@@ -13,6 +13,10 @@ log_file="/var/log/cetbot-renew.log"
  ######################################
 ####### testes arquivo de log ##########
  ######################################
+# INSTALL CERTBOT 
+# sudo dnf install epel-release
+# sudo dnf install certbot python3-certbot-apache mod_ssl
+# sudo certbot --apache -d example.com
 
 # Verifica se existe o diretorio para armazenar os logs se nao existir sera criado!
 if [ ! -d $log_file ]; then
