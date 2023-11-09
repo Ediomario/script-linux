@@ -17,7 +17,7 @@ log_file="/var/log/cetbot-renew.log"
 # Verifica se existe o diretorio para armazenar os logs se nao existir sera criado!
 if [ ! -d $log_file ]; then
     touch $log_file
-    printf "[$date_format] Arquivo de log checado e criado com sucesso!!\n" >> $log_fi$
+    printf "[$date_format] Arquivo de log checado e criado com sucesso!!\n" >> $log_file
 fi
 
 #######################################
@@ -37,7 +37,7 @@ systemctl restart zabbix-server zabbix-agent httpd php-fpm
 # Escrevendo arquivo de log para simples conferencia!
 echo "[$date_format] \n"  >> $log_file
 tail $log_lets >> $log_file
-echo "[$date_format] Script para renovar certificado da url exemplo.com.br$
+echo "[$date_format] Script para renovar certificado da url exemplo.com.br" >>$log_file
 
 # Remove arquivos de logs antigos -10 dias!
 find $log_file -type f -mtime +10 -exec rm -rf {} \;
